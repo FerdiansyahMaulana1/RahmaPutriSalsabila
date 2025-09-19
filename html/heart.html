@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rahma Putri Salsabila</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    body {
+  margin: 0;
+  overflow: hidden;
+}
+svg {
+  display: none; /* SVG hanya dipakai buat data, tidak ditampilkan */
+}
+body {
+  margin: 0;
+  background: #000;
+  font-family: "Poppins", sans-serif;
+  color: #fff;
+  overflow-x: hidden; /* biar ga geser ke samping */
+}
+
+canvas {
+  position: fixed; /* canvas selalu nempel full screen */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.title-message {
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  text-shadow: 0 0 10px rgba(255,255,255,0.8);
+  z-index: 1;
+}
+
+.footer-message {
+  position: relative;   /* bukan absolute lagi */
+  z-index: 1;
+  max-width: 100%;
+  margin-top: 100vh;    /* muncul di bawah layar penuh (setelah love) */
+  padding: 20px;
+  font-size: 1.2rem;
+  text-align: center;
+  line-height: 1.6;
+}
+
+
+  </style>
+</head>
+<body>
+  <!-- SVG path buat bentuk hati -->
+  <svg viewBox="0 0 600 552" xmlns="http://www.w3.org/2000/svg">
+    <path d="M300 520 L50 300 A150 150 0 0 1 300 100 A150 150 0 0 1 550 300 Z"
+          fill="none" stroke="none"/>
+  </svg>
+
+   <div class="title-message">
+  <h1>Untuk Rahma Putri Salsabila</h1>
+</div>
+
+<div class="footer-message">
+  <p>
+    Happy late birthday sayang 🩵🩵 semoga apaa yang di semogakan tersemogakan
+    dan semua yang kamuu mauu tercapai.. semogaa kamu juga jadii bisa lebih baik
+    dari harii kemarenn kemaren yaa. kamuu bole kejar apaa yang kamu mauu, tapii
+    jangan lupa diri yaa sayangg.. maaff kalo akuu belum menuhin ekspetasi kamu yaa,
+    banyakin sabarr atas semua yang terjadi ke kamu.. but for the last,
+    happy birthday babe🩵
+  </p>
+</div>
+
+
+<!-- Ganti versi Three.js + OrbitControls ke r127 -->
+<script src="https://unpkg.com/three@0.127.0/build/three.min.js"></script>
+<script src="https://unpkg.com/three@0.127.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+
+  <!-- Script utama -->
+  <script>console.clear();
+
+/* SETUP */
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(
+  75,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  5000
+);
+camera.position.z = 800;
+
+const renderer = new THREE.WebGLRenderer();
+renderer.setPixelRatio(window.devicePixelRatio > 1 ? 2 : 1);
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+/* CONTROLS */
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+
+
+/* PARTICLES */
+const tl = gsap.timeline({ repeat: -1, yoyo: true });
+
+const path = document.querySelector("path");
+if (!path) {
+  console.error("❌ SVG path tidak ditemukan!");
+}
+
+const length = path.getTotalLength();
+const vertices = [];
+
+for (let i = 0; i < length; i += 0.1) {
+  const point = path.getPointAtLength(i);
+  const vector = new THREE.Vector3(point.x, -point.y, 0);
+
+  // Random offset biar lebih organik
+  vector.x += (Math.random() - 0.5) * 30;
+  vector.y += (Math.random() - 0.5) * 30;
+  vector.z += (Math.random() - 0.5) * 70;
+
+  vertices.push(vector);
+
+  // Animasi keluar dari pusat hati
+  tl.from(vector, {
+    x: 300,   // tengah viewBox
+    y: -276,  // tengah viewBox (dibalik Y)
+    z: 0,
+    ease: "power2.inOut",
+    duration: gsap.utils.random(2, 5) // gunakan util GSAP, bukan string
+  }, i * 0.002);
+}
+
+const geometry = new THREE.BufferGeometry().setFromPoints(vertices);
+const material = new THREE.PointsMaterial({
+  color: 0xee5282,
+  blending: THREE.AdditiveBlending,
+  size: 3
+});
+const particles = new THREE.Points(geometry, material);
+
+// Sesuaikan posisi dengan viewBox SVG
+particles.position.x -= 600 / 2;
+particles.position.y += 552 / 2;
+
+scene.add(particles);
+
+// Rotasi scene perlahan
+gsap.fromTo(scene.rotation, { y: -0.2 }, {
+  y: 0.2,
+  repeat: -1,
+  yoyo: true,
+  ease: "power2.inOut",
+  duration: 3
+});
+
+/* RENDER LOOP */
+function render() {
+  requestAnimationFrame(render);
+  geometry.setFromPoints(vertices);
+   controls.update();
+  renderer.render(scene, camera);
+}
+render();
+
+/* RESIZE */
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
+window.addEventListener("resize", onWindowResize);
+
+
+
+</script>
+</body>
+</html>

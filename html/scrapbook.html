@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Love Story Scrapbook</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #ff9a9e, #fecfef, #fecfef);
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .title {
+            text-align: center;
+            color: #8b4b6b;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .scrapbook {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            background: #f4f1e8;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            padding: 40px;
+            border: 3px solid #d4af37;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+        }
+
+        .scrapbook:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .scrapbook-cover {
+            text-align: center;
+            position: relative;
+        }
+
+        .scrapbook-cover h2 {
+            font-size: 3em;
+            color: #8b4b6b;
+            margin-bottom: 20px;
+            font-family: 'Brush Script MT', cursive;
+        }
+
+        .heart-decoration {
+            color: #ff6b9d;
+            font-size: 2em;
+            margin: 20px 0;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .click-hint {
+            color: #666;
+            font-style: italic;
+            margin-top: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .vintage-corner {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: #d4af37;
+            opacity: 0.3;
+        }
+
+        .vintage-corner.top-left {
+            top: 10px;
+            left: 10px;
+            border-radius: 0 0 100% 0;
+        }
+
+        .vintage-corner.top-right {
+            top: 10px;
+            right: 10px;
+            border-radius: 0 0 0 100%;
+        }
+
+        .vintage-corner.bottom-left {
+            bottom: 10px;
+            left: 10px;
+            border-radius: 0 100% 0 0;
+        }
+
+        .vintage-corner.bottom-right {
+            bottom: 10px;
+            right: 10px;
+            border-radius: 100% 0 0 0;
+        }
+
+        /* Halaman dalam scrapbook */
+        .scrapbook-pages {
+            display: none;
+            background: #fff8dc;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 20px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page-content {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 2px dashed #ff9a9e;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .page-title {
+            font-size: 2em;
+            color: #8b4b6b;
+            text-align: center;
+            margin-bottom: 20px;
+            font-family: 'Brush Script MT', cursive;
+        }
+
+        .memory-text {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #444;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .photo-placeholder {
+            width: 200px;
+            height: 150px;
+            background: linear-gradient(45deg, #ff9a9e, #fecfef);
+            border-radius: 10px;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2em;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+            transform: rotate(-2deg);
+        }
+
+        .photo-placeholder:nth-child(even) {
+            transform: rotate(2deg);
+        }
+
+        .navigation {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .nav-btn {
+            background: #ff6b9d;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .nav-btn:hover {
+            background: #ff4757;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+
+        .nav-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            font-size: 1.2em;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .close-btn:hover {
+            background: #ff3742;
+        }
+
+        .decorative-hearts {
+            position: absolute;
+            color: #ff9a9e;
+            font-size: 1.5em;
+            opacity: 0.3;
+        }
+
+        .heart1 { top: 20px; left: 20px; }
+        .heart2 { top: 50px; right: 30px; }
+        .heart3 { bottom: 30px; left: 40px; }
+        .heart4 { bottom: 20px; right: 20px; }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2em;
+            }
+            
+            .scrapbook {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .scrapbook-cover h2 {
+                font-size: 2.5em;
+            }
+            
+            .photo-placeholder {
+                width: 150px;
+                height: 120px;
+            }
+        }
+        .button-container {
+  text-align: center;
+  margin-top: 15px;
+}
+
+/* Style tombol */
+.btn-link {
+  display: inline-block;
+  background-color: #000; /* hitam */
+  color: #fff;           /* teks putih */
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.3s;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">💕 Our Love Story 💕</h1>
+        
+        <div class="scrapbook" id="scrapbook" onclick="openScrapbook()">
+            <div class="vintage-corner top-left"></div>
+            <div class="vintage-corner top-right"></div>
+            <div class="vintage-corner bottom-left"></div>
+            <div class="vintage-corner bottom-right"></div>
+            
+            <div class="scrapbook-cover">
+                <h2>Our Memory Book</h2>
+                <div class="heart-decoration">💖</div>
+                <p>Kenangan kita</p>
+                <div class="heart-decoration">💕 💗 💕</div>
+                <p class="click-hint">Klik untuk membuka scrapbook ✨</p>
+            </div>
+        </div>
+        
+        <div class="scrapbook-pages" id="scrapbookPages">
+            <button class="close-btn" onclick="closeScrapbook()">×</button>
+            
+            <div class="decorative-hearts heart1">💕</div>
+            <div class="decorative-hearts heart2">💖</div>
+            <div class="decorative-hearts heart3">💗</div>
+            <div class="decorative-hearts heart4">💝</div>
+            
+            <!-- Halaman 1: Pertemuan Pertama -->
+            <div class="page active" id="page1">
+                <div class="page-content">
+                    <h3 class="page-title">Happy birthday anakk kecill akuu yang ke 20tahunnn nyaaa</h3>
+                    <div class="photo-placeholder">
+                        <img src="/image/rahma.jpg" alt="Foto Cewek Farrel" class="photo-placeholder">
+                    </div>
+                    <p class="memory-text">
+                     Happy late birthday sayang 🤍🤍 semoga apaa yang di semogakan tersemogakan dan semua yang kamuu mauu tercapai.. semogaa panjang umur sehat selalu and semogaa kamu juga jadii bisa lebih baik dari harii kemarenn kemaren yaa. kamuu bole kejar apaa yang kamu mauu, tapii jangan lupa diri yaa sayangg.. maaff kalo akuu belum menuhin ekspetasi kamu yaa, banyakin sabarr atas semua yang terjadi ke kamu.. but for the last, happy birthday babe🤍
+                    </p>
+                    <div class="photo-placeholder">
+                         <img src="/image/fotbar.1.jpg" alt="Foto Cewek Farrel" class="photo-placeholder">
+                    </div>
+                    <p class="memory-text">
+                        inget gaa momentt ini? inii moment dimana kitaa nonton dan selisih beberapa jam sebelum kitaa jadiann.. lucuu banget disini kamu masi malu maluu
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Halaman 2: Kencan Pertama -->
+            <div class="page" id="page2">
+                <div class="page-content">
+                    <h3 class="page-title">Memorable kita❤️</h3>
+                    <div class="photo-placeholder">
+                        <img src="/image/fotbar.2.jpg" alt="Foto Cewek Farrel" class="photo-placeholder">
+                    </div>
+                    <p class="memory-text">
+                        inii memorable bangett sii.. soalnya ini photobox pertama kitaa yaa walaupun belum jadian tapii gapapaa, tetep lucuu ko.. btw ituu kuncirannya mengganggu
+                    </p>
+                    <div class="photo-placeholder">
+                          <img src="/image/fotbar.3.jpg" alt="Foto Cewek Farrel" class="photo-placeholder">
+                    </div>
+                    <p class="memory-text">
+                        inii moment kondangan kitaa yang keduaa setelah kondangan dekett syahida.. lucuu kan? kamuu cantii banget disitu..
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Halaman 3: Momen Spesial -->
+            <div class="page" id="page3">
+                <div class="page-content">
+                    <div class="photo-placeholder">
+                        <img src="/image/farrel.4.jpg" alt="Foto Cewek Farrel" class="photo-placeholder">
+                    </div>
+                    <p class="memory-text">
+                        ingett gaa yang ini sayang? pastinya ingett kan? kalo gaa inget betumbuk kitaa. btw inii foto yang paling akuu suka karena disinii kamu cantii.. inii foto fav akuu pas kita photobox
+                    </p>
+                    <div class="photo-placeholder">
+                         <img src="/image/fotbar.5.jpg" alt="Foto Cewek Farrel" class="photo-placeholder">
+                    </div>
+                    <p class="memory-text">
+                        btw inii foto pas kita jajan abis pulang sekull hehe, lucuu yaa dulu mukanya masii bocah and sekarang kamu udaa ultah lagi ajaa
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Halaman 4: Masa Depan -->
+            <div class="page" id="page4">
+                <div class="page-content">
+                    <div class="photo-placeholder">
+                          <img src="/image/fotbar.6.jpg" alt="Foto Cewek Farrel" class="photo-placeholder">
+                    </div>
+                    <p class="memory-text">
+                        and this foto kitaa pas camp, kangen osis gaa sii? cumaa kesempatan ituu yang bikin kita bisa jalan jalan waktu sekolaa dulu..
+                    </p>
+                    <div class="photo-placeholder">
+                          <img src="/image/fotbar.7.jpg" alt="Foto Cewek Farrel" class="photo-placeholder">
+                    </div>
+                     <p class="memory-text">
+                       and for last, happy birthday princess kecill kuu.. cantii yaa? sekali lagii maafin semua kesalahan yang akuu buat yaa, semogaa semua doa kamu ke kabull. inii slide terakhir yang berartii slide special yang sengaja ditaro buatt penutup.. ilangin yaa kebiasaan kebiasaan kamu yang buruk and semangat jugaa tempuh jalan kuliahnyaa. akuu bangga sama kamu karena kamu udaa banyakin sabar sampe di titik sekarang dan akuu harap diperluas lagii yaa rasa sabarnya, mengingat akuu yang kadang suka bikinn kamu kesel, maafin akuu yaa masi suka ngepod samping kamu.. i lovee youu my little princess 🤍
+                    </p>
+                  <p class="button-container">
+                    <a href="heart.html" class="btn-link">I have something for you</a>
+                    </p>
+                </div>
+            </div>
+          
+            <div class="navigation">
+                <button class="nav-btn" id="prevBtn" onclick="previousPage()">← Sebelumnya</button>
+                <span id="pageCounter">Halaman 1 dari 4</span>
+                <button class="nav-btn" id="nextBtn" onclick="nextPage()">Selanjutnya →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        const totalPages = 4;
+
+        function openScrapbook() {
+            document.getElementById('scrapbook').style.display = 'none';
+            document.getElementById('scrapbookPages').style.display = 'block';
+            document.querySelector('.title').style.display = 'none';
+            updateNavigation();
+        }
+
+        function closeScrapbook() {
+            document.getElementById('scrapbook').style.display = 'block';
+            document.getElementById('scrapbookPages').style.display = 'none';
+            document.querySelector('.title').style.display = 'block';
+            currentPage = 1;
+            showPage(currentPage);
+        }
+
+        function showPage(pageNum) {
+            // Sembunyikan semua halaman
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+            
+            // Tampilkan halaman yang dipilih
+            document.getElementById(`page${pageNum}`).classList.add('active');
+            
+            updateNavigation();
+        }
+
+        function nextPage() {
+            if (currentPage < totalPages) {
+                currentPage++;
+                showPage(currentPage);
+            }
+        }
+
+        function previousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                showPage(currentPage);
+            }
+        }
+
+        function updateNavigation() {
+            document.getElementById('pageCounter').textContent = `Halaman ${currentPage} dari ${totalPages}`;
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = currentPage === totalPages;
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (document.getElementById('scrapbookPages').style.display === 'block') {
+                if (e.key === 'ArrowLeft') previousPage();
+                if (e.key === 'ArrowRight') nextPage();
+                if (e.key === 'Escape') closeScrapbook();
+            }
+        });
+    </script>
+</body>
+</html>
